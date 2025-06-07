@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline</title>
+</head>
+
+<style>
+    .timeline-section {
+  position: relative;
+  padding-left: 50px;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 0;
+  left: 33px;
+  width: 4px;
+  height: 100%;
+  background: rgba(0, 0, 255, 0.2); /* ligne bleu clair */
+  z-index: 0;
+  overflow: hidden;
+}
+
+.timeline-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 0%;
+  width: 100%;
+  background-color: #0000ff; /* bleu plein */
+  transition: height 0.3s ease;
+  z-index: 1;
+}
+
+.timeline-step {
+  position: relative;
+  margin-bottom: 80px;
+}
+
+.timeline-bullet {
+  position: absolute;
+  left: -30px;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 0, 255, 0.2);
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+  z-index: 2;
+}
+
+.timeline-step.active .timeline-bullet {
+  background-color: #0000ff;
+}
+</style>
+
+<body>
+
+    <div class="timeline-section">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-step" data-step="1">
+            <div class="timeline-bullet">1</div>
+        </div>
+
+        <div class="timeline-step" data-step="2">
+            <div class="timeline-bullet">2</div>
+        </div>
+
+        <!-- etc. jusqu’à 5 -->
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const steps = document.querySelectorAll('.timeline-step');
+            const line = document.querySelector('.timeline-line::before');
+
+            const updateTimeline = () => {
+                let scrollTop = window.scrollY + window.innerHeight / 2;
+                let activeIndex = -1;
+
+                steps.forEach((step, index) => {
+                    const offsetTop = step.offsetTop;
+                    if (scrollTop > offsetTop) {
+                        step.classList.add('active');
+                        activeIndex = index;
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+
+                const lineFill = document.querySelector('.timeline-line::before');
+                if (lineFill) {
+                    const lastStep = steps[activeIndex];
+                    const sectionTop = document.querySelector('.timeline-section').offsetTop;
+                    const percent = lastStep ? ((lastStep.offsetTop - sectionTop) / document.querySelector('.timeline-section').offsetHeight) * 100 : 0;
+                    lineFill.style.height = percent + '%';
+                }
+            };
+
+            window.addEventListener('scroll', updateTimeline);
+            updateTimeline();
+        });
+    </script>
+</body>
+
+</html>
