@@ -5,111 +5,159 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timeline</title>
+    <style>
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .timeline-section {
+            position: relative;
+            padding-left: 70px;
+            margin-top: 50px;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            left: 33px;
+            width: 4px;
+            height: 100%;
+            background: rgba(0, 0, 255, 0.2); /* ligne bleu clair */
+            z-index: 0;
+        }
+
+        .timeline-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 0%;
+            width: 100%;
+            background-color: #0000ff; /* bleu plein */
+            transition: height 0.5s ease;
+            z-index: 1;
+        }
+
+        .timeline-step {
+            position: relative;
+            margin-bottom: 120px;
+            opacity: 0.7;
+            transition: opacity 0.5s ease;
+        }
+
+        .timeline-bullet {
+            position: absolute;
+            left: -50px;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 0, 255, 0.2);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.5s ease;
+            z-index: 2;
+        }
+
+        .timeline-content {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .timeline-step.active {
+            opacity: 1;
+        }
+
+        .timeline-step.active .timeline-bullet {
+            background-color: #0000ff;
+        }
+    </style>
 </head>
 
-<style>
-    .timeline-section {
-  position: relative;
-  padding-left: 50px;
-}
-
-.timeline-line {
-  position: absolute;
-  top: 0;
-  left: 33px;
-  width: 4px;
-  height: 100%;
-  background: rgba(0, 0, 255, 0.2); /* ligne bleu clair */
-  z-index: 0;
-  overflow: hidden;
-}
-
-.timeline-line::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 0%;
-  width: 100%;
-  background-color: #0000ff; /* bleu plein */
-  transition: height 0.3s ease;
-  z-index: 1;
-}
-
-.timeline-step {
-  position: relative;
-  margin-bottom: 80px;
-}
-
-.timeline-bullet {
-  position: absolute;
-  left: -30px;
-  top: 0;
-  width: 30px;
-  height: 30px;
-  background-color: rgba(0, 0, 255, 0.2);
-  color: white;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-  z-index: 2;
-}
-
-.timeline-step.active .timeline-bullet {
-  background-color: #0000ff;
-}
-</style>
-
 <body>
+    <div class="container-timeline">        
+        <div class="timeline-section">
+            <div class="timeline-line">
+                <div class="timeline-fill"></div>
+            </div>
 
-    <div class="timeline-section">
-        <div class="timeline-line"></div>
+            <div class="timeline-step" data-step="1">
+                <div class="timeline-bullet">1</div>
+            </div>
 
-        <div class="timeline-step" data-step="1">
-            <div class="timeline-bullet">1</div>
+            <div class="timeline-step" data-step="2">
+                <div class="timeline-bullet">2</div>
+            </div>
+
+            <div class="timeline-step" data-step="3">
+                <div class="timeline-bullet">3</div>
+            </div>
+
+            <div class="timeline-step" data-step="4">
+                <div class="timeline-bullet">4</div>
+            </div>
+
+            <div class="timeline-step" data-step="5">
+                <div class="timeline-bullet">5</div>
+            </div>
         </div>
-
-        <div class="timeline-step" data-step="2">
-            <div class="timeline-bullet">2</div>
-        </div>
-
-        <!-- etc. jusqu’à 5 -->
     </div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const steps = document.querySelectorAll('.timeline-step');
-            const line = document.querySelector('.timeline-line::before');
-
+            const lineFill = document.querySelector('.timeline-fill');
+            const timelineSection = document.querySelector('.timeline-section');
+            
+            // Hauteur totale de la timeline (dernière étape + marge)
+            const getTimelineHeight = () => {
+                const lastStep = steps[steps.length - 1];
+                return lastStep.offsetTop + lastStep.offsetHeight - timelineSection.offsetTop;
+            };
+            
             const updateTimeline = () => {
-                let scrollTop = window.scrollY + window.innerHeight / 2;
-                let activeIndex = -1;
-
-                steps.forEach((step, index) => {
-                    const offsetTop = step.offsetTop;
-                    if (scrollTop > offsetTop) {
+                // Point milieu de l'écran
+                const viewportMiddle = window.scrollY + window.innerHeight / 2;
+                const sectionTop = timelineSection.getBoundingClientRect().top + window.scrollY;
+                
+                // Calcul du pourcentage de progression
+                let progress = (viewportMiddle - sectionTop) / getTimelineHeight();
+                progress = Math.max(0, Math.min(1, progress)); // Limiter entre 0 et 1
+                
+                // Mise à jour de la hauteur de remplissage
+                lineFill.style.height = (progress * 100) + '%';
+                
+                // Mise à jour des étapes actives
+                steps.forEach((step) => {
+                    const stepTop = step.getBoundingClientRect().top + window.scrollY;
+                    if (viewportMiddle > stepTop) {
                         step.classList.add('active');
-                        activeIndex = index;
                     } else {
                         step.classList.remove('active');
                     }
                 });
-
-                const lineFill = document.querySelector('.timeline-line::before');
-                if (lineFill) {
-                    const lastStep = steps[activeIndex];
-                    const sectionTop = document.querySelector('.timeline-section').offsetTop;
-                    const percent = lastStep ? ((lastStep.offsetTop - sectionTop) / document.querySelector('.timeline-section').offsetHeight) * 100 : 0;
-                    lineFill.style.height = percent + '%';
-                }
             };
 
+            // Ajouter suffisamment d'espace en bas pour permettre le défilement
+            const addScrollSpace = () => {
+                const footer = document.createElement('div');
+                footer.style.height = '50vh';
+                document.body.appendChild(footer);
+            };
+            
+            addScrollSpace();
             window.addEventListener('scroll', updateTimeline);
-            updateTimeline();
+            window.addEventListener('resize', updateTimeline);
+            
+            // Initialisation
+            setTimeout(updateTimeline, 100);
         });
     </script>
 </body>

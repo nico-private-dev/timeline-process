@@ -1,0 +1,89 @@
+/**
+ * Timeline Process - Styles pour la partie visuelle uniquement
+ */
+
+.timeline-container {
+    position: relative;
+    width: 70px; /* Largeur fixe pour contenir la ligne et les bullets */
+    height: 100%; /* Prend toute la hauteur disponible */
+    min-height: 500px; /* Hauteur minimale */
+}
+
+.timeline-line {
+    position: absolute;
+    top: 0;
+    left: 33px;
+    width: 4px;
+    height: 100%;
+    background: rgba(0, 0, 255, 0.2); /* ligne bleu clair */
+    z-index: 0;
+}
+
+.timeline-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 0%; /* Sera mis à jour par JS */
+    width: 100%;
+    background-color: #0000ff; /* bleu plein */
+    transition: height 0.5s ease;
+    z-index: 1;
+}
+
+.timeline-bullet {
+    position: absolute;
+    left: 20px; /* Centré par rapport à la ligne */
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0, 0, 255, 0.2);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.5s ease;
+    z-index: 2;
+    cursor: pointer;
+}
+
+/* Positionnement vertical de chaque bullet */
+.timeline-bullet[data-step="1"] {
+    top: 0%;
+}
+.timeline-bullet[data-step="2"] {
+    top: 20%;
+}
+.timeline-bullet[data-step="3"] {
+    top: 40%;
+}
+.timeline-bullet[data-step="4"] {
+    top: 60%;
+}
+.timeline-bullet[data-step="5"] {
+    top: 80%;
+}
+/* Ajouter plus d'étapes si nécessaire */
+
+/* État actif */
+.timeline-bullet.active {
+    background-color: #0000ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .timeline-container {
+        width: 50px;
+    }
+    
+    .timeline-line {
+        left: 23px;
+    }
+    
+    .timeline-bullet {
+        left: 10px;
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+}
