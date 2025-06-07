@@ -25,34 +25,48 @@ function timeline_process_acf_shortcode($atts) {
     // Début du buffer de sortie
     ob_start();
     ?>
-    <div class="timeline-process">
-        <div class="timeline-container">
+    <div class="container-timeline">        
+        <div class="timeline-section">
             <div class="timeline-line">
                 <div class="timeline-fill"></div>
             </div>
-            <div class="timeline-bullets">
-                <?php foreach ($steps as $index => $step) : ?>
-                    <div class="timeline-bullet" data-step="<?php echo $index + 1; ?>"></div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-        
-        <div class="timeline-content">
-            <?php foreach ($steps as $index => $step) : ?>
-                <div class="timeline-step" data-timeline-step="<?php echo $index + 1; ?>">
-                    <div class="timeline-step-inner">
-                        <div class="timeline-step-content">
-                            <h3 class="timeline-step-title"><?php echo esc_html($step['titre_etape']); ?></h3>
-                            <div class="timeline-step-text">
-                                <?php echo $step['contenu_etape']; ?>
-                            </div>
-                        </div>
+
+            <?php foreach ($steps as $index => $step) : 
+                $step_number = $index + 1;
+            ?>
+                <div class="timeline-step" data-step="<?php echo $step_number; ?>">
+                    <div class="timeline-bullet"><?php echo $step_number; ?></div>
+                    <div class="timeline-content">
+                        <h2><?php echo esc_html($step['titre_etape']); ?></h2>
+                        <?php echo wpautop($step['contenu_etape']); ?>
                         
-                        <?php if (!empty($step['image_etape'])) : ?>
-                            <div class="timeline-step-image">
-                                <?php echo wp_get_attachment_image($step['image_etape'], 'large'); ?>
+                        <?php 
+                        // Déboguer pour voir ce qui est stocké dans image_etape
+                        // echo '<pre>'; print_r($step['image_etape']); echo '</pre>';
+                        
+                        if (!empty($step['image_etape'])) : 
+                            // Si c'est un ID d'image
+                            if (is_numeric($step['image_etape'])) {
+                                $image_url = wp_get_attachment_image_url($step['image_etape'], 'large');
+                            } 
+                            // Si c'est déjà une URL ou un tableau
+                            else if (is_array($step['image_etape'])) {
+                                $image_url = $step['image_etape']['url'] ?? '';
+                            }
+                            // Si c'est une URL directe
+                            else {
+                                $image_url = $step['image_etape'];
+                            }
+                            
+                            if ($image_url) :
+                        ?>
+                            <div class="timeline-image">
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($step['titre_etape']); ?>">
                             </div>
-                        <?php endif; ?>
+                        <?php 
+                            endif;
+                        endif; 
+                        ?>
                     </div>
                 </div>
             <?php endforeach; ?>

@@ -2,32 +2,35 @@
  * Timeline Process - Styles pour la version ACF
  */
 
-/* Structure principale */
-.timeline-process {
-    display: flex;
-    gap: 40px;
-    position: relative;
-    margin: 40px 0;
+/* Container principal */
+.container-timeline {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Conteneur de la timeline (ligne + bullets) */
-.timeline-container {
-    position: sticky;
-    top: 100px;
-    width: 60px;
-    height: fit-content;
-    align-self: flex-start;
+.container-timeline h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+/* Section de la timeline */
+.timeline-section {
+    position: relative;
+    padding-left: 70px;
+    margin-top: 50px;
 }
 
 /* Ligne verticale */
 .timeline-line {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
+    top: 0;
+    left: 33px;
+    width: 4px;
     height: 100%;
-    background-color: #e0e0e0;
-    z-index: 1;
+    background: rgba(0, 0, 255, 0.2); /* ligne bleu clair */
+    z-index: 0;
 }
 
 /* Ligne de remplissage qui s'anime */
@@ -35,60 +38,19 @@
     position: absolute;
     left: 0;
     top: 0;
+    height: 0%;
     width: 100%;
-    height: 0;
-    background-color: #0073aa; /* Couleur WordPress */
-    transition: height 0.3s ease;
-}
-
-/* Conteneur des bullets */
-.timeline-bullets {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-}
-
-/* Style des bullets */
-.timeline-bullet {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: white;
-    border: 2px solid #e0e0e0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* Positionnement des bullets en fonction de leur étape */
-.timeline-bullet:nth-child(1) { top: 0; }
-.timeline-bullet:nth-child(2) { top: 20%; }
-.timeline-bullet:nth-child(3) { top: 40%; }
-.timeline-bullet:nth-child(4) { top: 60%; }
-.timeline-bullet:nth-child(5) { top: 80%; }
-.timeline-bullet:nth-child(6) { top: 100%; }
-
-/* Bullet active */
-.timeline-bullet.active {
-    border-color: #0073aa;
-    background-color: #0073aa;
-}
-
-/* Conteneur du contenu */
-.timeline-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
+    background-color: #0000ff; /* bleu plein */
+    transition: height 0.5s ease;
+    z-index: 1;
 }
 
 /* Style d'une étape */
 .timeline-step {
+    position: relative;
+    margin-bottom: 120px;
     opacity: 0.7;
-    transition: opacity 0.3s ease;
-    padding: 20px 0;
+    transition: opacity 0.5s ease;
 }
 
 /* Étape active */
@@ -96,77 +58,74 @@
     opacity: 1;
 }
 
-/* Structure interne d'une étape */
-.timeline-step-inner {
+.timeline-step.active .timeline-bullet {
+    background-color: #0000ff;
+}
+
+/* Style des bullets */
+.timeline-bullet {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0, 0, 255, 0.2);
+    color: white;
+    font-weight: bold;
     display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.5s ease;
+    z-index: 2;
 }
 
-/* Contenu textuel */
-.timeline-step-content {
-    flex: 1;
-    min-width: 300px;
+/* Contenu d'une étape */
+.timeline-content {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Titre de l'étape */
-.timeline-step-title {
+.timeline-content h2 {
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 24px;
     color: #0073aa;
 }
 
-/* Image de l'étape */
-.timeline-step-image {
-    flex: 1;
-    min-width: 300px;
+.timeline-content p {
+    margin-bottom: 15px;
+    line-height: 1.6;
 }
 
-.timeline-step-image img {
-    width: 100%;
+/* Image de l'étape */
+.timeline-image {
+    margin-top: 20px;
+}
+
+.timeline-image img {
+    max-width: 100%;
     height: auto;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .timeline-process {
-        flex-direction: column;
-    }
-    
-    .timeline-container {
-        position: relative;
-        top: 0;
-        width: 100%;
-        height: 60px;
-        margin-bottom: 20px;
-    }
-    
-    .timeline-line {
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 100%;
-        height: 2px;
-    }
-    
-    .timeline-fill {
-        height: 100%;
-        width: 0;
+    .timeline-section {
+        padding-left: 50px;
     }
     
     .timeline-bullet {
-        top: 50% !important;
-        transform: translateY(-50%);
-        left: auto;
+        left: -35px;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
     }
     
-    .timeline-bullet:nth-child(1) { left: 0; }
-    .timeline-bullet:nth-child(2) { left: 20%; }
-    .timeline-bullet:nth-child(3) { left: 40%; }
-    .timeline-bullet:nth-child(4) { left: 60%; }
-    .timeline-bullet:nth-child(5) { left: 80%; }
-    .timeline-bullet:nth-child(6) { left: 100%; }
+    .timeline-line {
+        left: 22px;
+    }
 }
